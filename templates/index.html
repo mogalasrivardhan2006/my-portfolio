@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio & AI Assistant</title>
+    <style>
+        body { font-family: system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; line-height: 1.6; color: #222; }
+        .card { border: 1px solid #ddd; padding: 16px; border-radius: 8px; margin-bottom: 16px; }
+        #chat-box { border: 1px solid #333; border-radius: 8px; padding: 16px; background: #f9f9f9; }
+        #messages { height: 250px; overflow-y: auto; margin-bottom: 12px; white-space: pre-line; }
+        .input-row { display: flex; gap: 8px; }
+        input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+        button { padding: 10px 18px; background: #111; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+        button:hover { background: #333; }
+    </style>
+</head>
+<body>
+    <h1>Moogala Sri Vardhan</h1>
+    <p>B.Tech Data Science | Gokaraju Rangaraju Institute of Engineering and Technology</p>
+
+    <div class="card">
+        <h3>Bio Data & Academic Profile</h3>
+        <p><strong>Student ID:</strong> 25241A67D9</p>
+        <p><strong>Degree:</strong> B.Tech in Data Science</p>
+        <p><strong>College:</strong> GRIET, Hyderabad</p>
+        <p><strong>CGPA:</strong> 8.3</p>
+    </div>
+
+    <h2>Ask My AI Assistant</h2>
+    <div id="chat-box">
+        <div id="messages"><strong>Bot:</strong> Hi! Ask me about my bio data, CGPA, lab timetable, or attendance.</div>
+        <div class="input-row">
+            <input type="text" id="user-input" placeholder="e.g., What is my CGPA? or Show my bio data..." onkeypress="if(event.key==='Enter') sendMessage()">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById("user-input");
+            const messages = document.getElementById("messages");
+            const text = input.value.trim();
+            if (!text) return;
+
+            messages.innerHTML += `\n\n<strong>You:</strong> ${text}`;
+            input.value = "";
+
+            const res = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: text })
+            });
+            const data = await res.json();
+            messages.innerHTML += `\n<strong>Bot:</strong> ${data.reply}`;
+            messages.scrollTop = messages.scrollHeight;
+        }
+    </script>
+</body>
+</html>
